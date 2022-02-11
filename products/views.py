@@ -11,7 +11,7 @@ def products(request):
     return render(request, 'products/products.html')
 
 
-def text_context(request):
+def test_context(request):
     context = {
         'title': 'GeekShop',
         'header': 'Welcome!',
@@ -23,6 +23,7 @@ def text_context(request):
             {'name': 'Черный рюкзак Nike Heritage', 'price': 2340},
             {'name': 'Черные туфли на платформе с 3 парами люверсов Dr Martens 1461 Bex', 'price': 13590},
             {'name': 'Темно-синие широкие строгие брюки ASOS DESIGN', 'price': 2890},
-        ]
+        ],
+        'is_promotion': True,
     }
     return render(request, 'products/test-context.html', context)
