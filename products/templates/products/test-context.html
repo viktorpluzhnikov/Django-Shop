@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+<h1>{{ header }}</h1>
+<p>{{ username }}</p>
+{% if is_promotion %}
+{% for product in products %}
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.price }} руб.</p>
+{% endfor %}
+{% else %}
+<p style="color: indianred;">Товаров нет.</p>
+{% endif %}
+</body>
+</html>
