@@ -1,7 +1,9 @@
 from django.shortcuts import render, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView
 
 from users.models import User
 from admins.forms import UserAdminRegistrationForm, UserAdminProfileForm
@@ -13,13 +15,16 @@ def index(request):
     return render(request, 'admins/index.html', context)
 
 
-# Read controller
-@user_passes_test(lambda u: u.is_staff)
-def admin_users(request):
-    users = User.objects.all
-    context = {'title': 'GeekShop - Admin', 'users': users}
-    return render(request, 'admins/admin-users-read.html', context)
+class UserAdminListView(ListView):
+    model = User
+    template_name = 'admins/admin-users-read.html'
 
+
+class UserAdminCreateView(CreateView):
+    model = User
+    form_class = UserAdminRegistrationForm
+    template_name = 'admins/admin-users-create.html'
+    success_url = reverse_lazy('admin_staff:admin_users')
 
 # Create controller
 @user_passes_test(lambda u: u.is_staff)
