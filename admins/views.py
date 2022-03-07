@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.list import ListView
 from django.utils.decorators import method_decorator
@@ -16,25 +16,32 @@ def index(request):
     return render(request, 'admins/index.html', context)
 
 
-class UserAdminListView(ListView):
-    model = User
-    template_name = 'admins/admin-users-read.html'
+
+class TitleMixin:
+    title = None
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(UserAdminListView, self).get_context_data(object_list=None, **kwargs)
-        context['title'] = 'GeekShop - Admin'
+        context = super(TitleMixin, self).get_context_data(object_list=None, **kwargs)
+        context['title'] = self.title
         return context
+
+
+class UserAdminListView(TitleMixin, ListView):
+    model = User
+    template_name = 'admins/admin-users-read.html'
+    title = 'GeekShop - Admin'
 
     @method_decorator(user_passes_test(lambda u: u.is_staff))
     def dispatch(self, request, *args, **kwargs):
         return super(UserAdminListView, self).dispatch(request, *args, **kwargs)
 
 
-class UserAdminCreateView(CreateView):
+class UserAdminCreateView(SuccessMessageMixin, CreateView):
     model = User
     form_class = UserAdminRegistrationForm
     template_name = 'admins/admin-users-create.html'
     success_url = reverse_lazy('admin_staff:admin_users')
+    success_message = 'Пользователь успешно создан!'
 
 
 class UserAdminUpdateView(UpdateView):
