@@ -19,6 +19,11 @@ class UserAdminListView(ListView):
     model = User
     template_name = 'admins/admin-users-read.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UserAdminListView, self).get_context_data(object_list=None, **kwargs)
+        context['title'] = 'GeekShop - Admin'
+        return context
+
 
 class UserAdminCreateView(CreateView):
     model = User
