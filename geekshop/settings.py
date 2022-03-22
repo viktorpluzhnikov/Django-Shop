@@ -143,8 +143,8 @@ LOGIN_URL = '/users/login/'
 # Email
 DOMAIN_NAME = 'http://localhost:8000'
 
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = '25'
-EMAIL_HOST_USER = 'django@geekshop.local'
-EMAIL_HOST_PASSWORD = 'geekshop'
+EMAIL_HOST = 'localhost'        #адсрес почтового сервера(smtp.mail.ru).
+EMAIL_PORT = '25'               #порт сервера
+EMAIL_HOST_USER = 'django@geekshop.local'   #имя пользователя, от которого будет отправлена почта
+EMAIL_HOST_PASSWORD = 'geekshop'            #пароль пользователя, от которого будет отправлена почта
 EMAIL_USE_SSL = False
