@@ -17,7 +17,7 @@
 </head>
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <a class="navbar-brand" href="{% url 'index' %}">GeekShop</a>
+    <a class="navbar-brand" href="{% url 'admins:index' %}">GeekShop</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i>
     </button>
     <!-- Navbar Search-->
@@ -47,7 +47,7 @@
             <div class="sb-sidenav-menu">
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">Приложения</div>
-                    <a class="nav-link" href="{% url 'admin_staff:admin_users' %}">
+                    <a class="nav-link" href="{% url 'admins:admin_users' %}">
                         <div class="sb-nav-link-icon">
                             <i class="fas fa-users"></i>
                         </div>
@@ -77,7 +77,7 @@
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid">
                 <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; GeekShop 2022</div>
+                    <div class="text-muted">Copyright &copy; GeekShop 2021</div>
                 </div>
             </div>
         </footer>
