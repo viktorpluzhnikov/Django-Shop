@@ -36,8 +36,23 @@ INSTALLED_APPS = [
     'products',
     'users',
     'baskets',
-    'admins'
+    'admins',
+    'social_django',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social\_core.backends.vk.VKOAuth2',          # бекенд авторизации через ВКонтакте
+    'django.contrib.auth.backends.ModelBackend',  # бекенд классической аутентификации, чтобы работала авторизация через обычный логин и пароль
+)
+
+LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = '8126926'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'CjxdXK3XAofhk8ehlfe9'
+SOCIAL_AUTH_VK_OAUTH2_API_VERSION = '5.131'
+SOCIAL_AUTH_VK_OAUTH2_IGNORE_DEFAULT_SCOPE = True
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email', 'age']
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,6 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',    #Настройка процессора шаблонов
             ],
         },
     },
