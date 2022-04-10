@@ -4,8 +4,6 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from .models import ShopUser, UserProfile
 
 from django.contrib.auth.forms import UserChangeForm
-from .models import ShopUserProfile
-
 
 
 class ShopUserLoginForm(AuthenticationForm):
@@ -77,7 +75,7 @@ class UserProfileEditForm(forms.ModelForm):  # https://django-crispy-forms.readt
 
 class ShopUserProfileEditForm(forms.ModelForm):
     class Meta:
-        model = ShopUserProfile
+        model = UserProfile
         fields = ('tagline', 'aboutMe', 'gender')
 
     def __init__(self, *args, **kwargs):

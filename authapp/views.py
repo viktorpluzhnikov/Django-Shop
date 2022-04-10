@@ -9,6 +9,8 @@ from django.urls import reverse
 
 from authapp.models import UserProfile, ShopUser
 
+from django.db import transaction
+from authapp.forms import ShopUserProfileEditForm
 
 
 def login(request):
@@ -37,7 +39,7 @@ def login(request):
         'next': next
     }
 
-    return render(request, 'authapp/login.html', content)
+    return render(request, 'users/login.html', content)
 
 
 def logout(request):
@@ -46,7 +48,7 @@ def logout(request):
 
 
 class UserRegisterView(TemplateView):
-    template_name = 'authapp/register.html'
+    template_name = 'users/registration.html'
     register_form_class = ShopUserRegisterForm
     model = ShopUser
 
@@ -98,16 +100,45 @@ def edit(request):
 
     if request.method == 'POST':
         edit_form = ShopUserEditForm(request.POST, request.FILES, instance=request.user)
-        profile_form = UserProfileEditForm(request.POST, instance=request.user.userprofile)
+        profile_form = UserProfileEditForm(request.POST, instance=request.users.userprofile)
         if edit_form.is_valid() and profile_form.is_valid():
             edit_form.save()
             return HttpResponseRedirect(reverse('auth:edit'))
     else:
         edit_form = ShopUserEditForm(instance=request.user)
-        profile_form = UserProfileEditForm(instance=request.user.userprofile)
+        profile_form = UserProfileEditForm(instance=request.users.userprofile)
     content = {'title': title, 'edit_form': edit_form, 'profile_form': profile_form}
 
     return render(request, 'authapp/edit.html', content)
+
+
+@transaction.atomic
+def edit(request):
+    title = 'Редактирование'
+
+    if request.method == 'POST':
+        edit_form = ShopUserEditForm(request.POST, request.FIELS, instance=request.user)
+        profile_form = ShopUserProfileEditForm(request.POST, instance=request.users.shopuserprofile)
+        if edit_form.is_valid() and profile_form.is_valid():
+            edit_form.save()
+            return HttpResponseRedirect(reverse('auth:edit'))
+    else:
+        edit_form = ShopUserEditForm(instance=request.user)
+        profile_form = ShopUserProfileEditForm(instance=request.users.shopuserprofile)
+
+    content = {
+        'title': title,
+        'edit_form': edit_form,
+        'profile_form': profile_form
+    }
+
+    return render(request, 'authapp/edit.html', content)
+
+
+
+
+
+
 
 # from django.core.mail import send_mail
 # from django.conf import settings
