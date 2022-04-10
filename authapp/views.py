@@ -10,6 +10,7 @@ from django.urls import reverse
 from authapp.models import UserProfile, ShopUser
 
 
+
 def login(request):
     title = 'вход'
 
