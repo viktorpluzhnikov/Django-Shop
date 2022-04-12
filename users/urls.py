@@ -1,6 +1,6 @@
 from django.urls import path
 
-from users.templates.users.views import UserLoginView, UserRegistrationView, UserLogoutView, UserProfileView, verify
+from users.views import UserLoginView, UserRegistrationView, UserLogoutView, UserProfileView, verify
 from django.contrib.auth.decorators import login_required
 
 app_name = 'users'
