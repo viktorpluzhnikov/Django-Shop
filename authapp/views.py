@@ -52,7 +52,7 @@ class UserRegisterView(TemplateView):
     register_form_class = ShopUserRegisterForm
     model = ShopUser
 
-    def send_verify_link(self, user):
+    def send_verify_link(self, user):                                                               # (1)
         verify_link = reverse('auth:verify', args=[user.email, user.activation_key])
         subject = f'Для активации пользователя {user.username} пройдите по ссылке'
         message = f'Для потверждения учетной записи {user.username} на портале\n' \

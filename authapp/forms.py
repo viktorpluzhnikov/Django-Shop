@@ -35,7 +35,7 @@ class ShopUserRegisterForm(UserCreationForm):
 
         return data
 
-    def save(self, commit=True):
+    def save(self, commit=True):                                            # Переопределили метод save формы регистрации (1)
         user = super(ShopUserRegisterForm, self).save()
         user.is_active = False
         salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:6]

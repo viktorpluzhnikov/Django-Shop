@@ -11,6 +11,8 @@ urlpatterns = [
     re_path(r'^register/$', authapp.UserRegisterView.as_view(), name='register'),
     re_path(r'^edit/$', authapp.edit, name='edit'),
 
-    path('veryfy/<str:email>/<str:activate_key>/', authapp.verify, name='verify')
+    path('veryfy/<str:email>/<str:activate_key>/', authapp.verify, name='verify'),
+    re_path(r'^verify/(?P<email>.+)/(?P<activation_key>\w+)/$', authapp.verify, name='verify'),
+
 ]
 
