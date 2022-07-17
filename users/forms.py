@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 
 from users.models import User
+import random, hashlib
+from .models import User, UserProfile
 
 
 class UserLoginForm(AuthenticationForm):
@@ -34,6 +36,14 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
 
+    def save(self, commit=True):  # Переопределили метод save формы регистрации (1)
+        user = super( UserRegistrationForm, self).save()
+        user.is_active = False
+        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:6]
+        user.activation_key = hashlib.sha1((user.email + salt).encode('utf8')).hexdigest()
+        user.save(update_fields=['is_active', 'activation_key'])
+        return user
+
 
 class UserProfileForm(UserChangeForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control py-4'}))
@@ -45,3 +55,14 @@ class UserProfileForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'image', 'username', 'email')
+
+
+# class ShopUserProfileEditForm(forms.ModelForm):
+#     class Meta:
+#         model = UserProfile
+#         fields = ('tagline', 'aboutMe', 'gender')
+#
+#     def __init__(self, *args, **kwargs):
+#         super(ShopUserProfileEditForm, self).__init__(*args, **kwargs)
+#         for field_name, field in self.fields.items():
+#             field.widget.attrs['class'] = 'form-control'

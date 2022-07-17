@@ -1,62 +1,54 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.list import ListView
-from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.utils.decorators import method_decorator
 
 from users.models import User
-from admins.forms import UserAdminRegistrationForm, UserAdminProfileForm
+from admins.forms import UserAdminRegisterForm, UserAdminProfileForm
 
 
-@user_passes_test(lambda u: u.is_staff)
+@user_passes_test(lambda u: u.is_superuser)
 def index(request):
-    context = {'title': 'GeekShop - Admin'}
-    return render(request, 'admins/index.html', context)
+    return render(request, 'admins/admin.html')
 
 
-
-class TitleMixin:
-    title = None
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(TitleMixin, self).get_context_data(object_list=None, **kwargs)
-        context['title'] = self.title
-        return context
-
-
-class UserAdminListView(TitleMixin, ListView):
+class UserListView(ListView):
     model = User
     template_name = 'admins/admin-users-read.html'
-    title = 'GeekShop - Admin'
 
-    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UserListView, self).get_context_data(**kwargs)
+        context['title'] = 'GeekShop - Админ | Пользователи'
+        return context
+
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, request, *args, **kwargs):
-        return super(UserAdminListView, self).dispatch(request, *args, **kwargs)
+        return super(UserListView, self).dispatch(request, *args, **kwargs)
 
 
-class UserAdminCreateView(SuccessMessageMixin, CreateView):
+class UserCreateView(CreateView):
     model = User
-    form_class = UserAdminRegistrationForm
     template_name = 'admins/admin-users-create.html'
-    success_url = reverse_lazy('admin_staff:admin_users')
-    success_message = 'Пользователь успешно создан!'
+    form_class = UserAdminRegisterForm
+    success_url = reverse_lazy('admins:admin_users')
 
 
-class UserAdminUpdateView(UpdateView):
+class UserUpdateView(UpdateView):
     model = User
     template_name = 'admins/admin-users-update-delete.html'
     form_class = UserAdminProfileForm
-    success_url = reverse_lazy('admin_staff:admin_users')
+    success_url = reverse_lazy('admins:admin_users')
 
 
-class UserAdminDeleteView(DeleteView):
+class UserDeleteView(DeleteView):
     model = User
     template_name = 'admins/admin-users-update-delete.html'
-    success_url = reverse_lazy('admin_staff:admin_users')
+    success_url = reverse_lazy('admins:admin_users')
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.safe_delete()
-        return HttpResponseRedirect(self.success_url)
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
